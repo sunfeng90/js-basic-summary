@@ -68,3 +68,26 @@ console.log(0.1 + 0.2 === 0.3) // false
 new Object()
 new Object
 ```
+### 重载
+- 没有重载：因为函数的参数是由包含零或多个值的数组来表示的。没有函数签名签名，真正的重载是不可能做到的。
+- 如何实现重载：通过检查传入函数的类型和数量并作出不同的反应，从而模仿方法的重载。
+- 如果声明多个同名函数，那么后面声明的会覆盖前面声明的函数
+### 变量和作用域
+- 如何判断一个类型：
+  - 基本数据类型：typeof
+  - 引用数据类型：instanceof
+  - 注意：
+    - 如果用instanceof检查基本数据类型，始终会返回false，因为基本类型不是对象
+    - 所有引用类型都是Object，所以用instanceof检查各种引用类型，始终返回true
+### 垃圾收集策略
+- 标记清除：常见
+- 引用计数：引用的次数为0时，就清除该变量。如果相互引用或者被某个函数重复多次调用的时候，就导致很多变量无法被回收。
+### Array
+- isArray(): 检查是否是数组
+- toString(): 转换成数组
+- push、pop、shift、unshift
+- sort、reverse
+- slice、concat、splice
+- indexOf、lastIndexOf
+- every、filter、map、forEach、some
+- reduce、reduceRight
