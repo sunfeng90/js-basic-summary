@@ -91,3 +91,15 @@ new Object
 - indexOf、lastIndexOf
 - every、filter、map、forEach、some
 - reduce、reduceRight
+### 函数表达式
+- 函数声明提升:在执行代码之前会先读取函数声明，可以把函数声明放在调用它的后面；
+  ```
+   sayHi(); 
+   function sayHi() {
+     console.log('Hello World');
+   }
+  ```
+- 创建函数的方式是使用函数表达式；
+- 函数表达式必须先赋值才能使用；
+### 闭包
+- 定义：有权访问另外一个函数作用域中变量的函数。
