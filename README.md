@@ -103,3 +103,97 @@ new Object
 - 函数表达式必须先赋值才能使用；
 ### 闭包
 - 定义：有权访问另外一个函数作用域中变量的函数。
+### 面向对象
+- 如何创建对象？
+```
+// 法1
+// const person = new Object();
+// person.name = "Frank";
+// person.age = 29;
+// person.job = "Software Engineer";
+// person.sayName = function() {
+//   console.log(this.name);
+// }
+
+// 法2
+// const person = {
+//   name: 'Frank',
+//   age: 30,
+//   job: "Software Engineer",
+//   sayName: function() {
+//     console.log(this.name);
+//   }
+// }
+```
+- 属性类型
+   - 数据属性
+     - Configureable
+     - Enumerable
+     - Writable
+     - Value
+```
+const person = {};
+
+Object.defineProperty(person, "name", {
+  writable: false,
+  value: "Gold"
+});
+console.log(person.name);
+person.name = "Frank";
+console.log(person.name);
+```
+   - 访问器属性
+     -  Configurable：默认值为true
+     -  Enumerable：默认值为true
+     -  Get：默认值为undefined
+     -  Set: 默认值为undefined
+```
+const book = {
+  _year: 1,
+  edition: 1
+};
+
+Object.defineProperty(book, "year", {
+  get: function() {
+    return this._year;
+  },
+  set: function(newValue) {
+    if (newValue > 2004) {
+      this._year = newValue;
+      this.edition += newValue - 2004;
+    }
+  }
+});
+book.year = 2005;
+console.log(book.edition);
+```
+- 创建对象使用到的模式
+   - 工厂模式
+     - 定义：通过一个函数封装创建对象的细节，类似工厂。
+     - 缺点：无法识别多个不同的对象。
+     - 例子：
+```
+function createPerson(name, age, job) {
+  const o = new Object();
+  o.name = name;
+  o.age = age;
+  o.job = job;
+  o.sayName = function() {
+    console.log(this.name);
+  };
+  return o;
+}
+const person1 = createPerson("Frank", 30, "Software Engineer");
+const person2 = createPerson("Greg", 30, "Doctor");
+person1.sayName();
+person2.sayName();
+```
+   - 构造函数模式
+     - 定义：
+     - 例子：
+   - 原型模式
+   - 组合使用构造函数和原型模式
+   - 动态原型模式
+   - 寄生构造函数模式
+   - 稳妥构造函数模式
+- 继承
