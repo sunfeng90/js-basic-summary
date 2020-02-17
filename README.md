@@ -189,9 +189,133 @@ person1.sayName();
 person2.sayName();
 ```
    - 构造函数模式
-     - 定义：
+     - 缺点：每个方法都要在每个实例上重新创建一遍。
      - 例子：
+```
+function Person(name, age, job) {
+  this.name = name;
+  this.age = age;
+  this.job = job;
+  this.sayName = function() {
+    console.log(this.name);
+  };
+};
+// 当作构造函数使用
+// const person1 = new Person("Frank", 30, "Software Engineer");
+// const person2 = new Person("Greg", 30, "Doctor");
+
+// 作为普通函数调用
+Person("Greg", 30, "Doctor");
+window.sayName();
+
+// 在另外一个对象的作用域中调用
+const obj = new Object();
+Person.call(obj, "Frank", 30, "Nurse");
+obj.sayName();
+```
    - 原型模式
+     - 含义：每个函数都有一个prototype属性，这个属性是一个指针，指向一个对象。而这个对象的用途
+     是包含可以由特定类型的所有实例共享的属性和方法。
+     - 好处：可以让所有对象实例共享它所包含的属性和方法。
+     - 其他：
+       - prototype
+         在脚本中没有标准的方式访问Prototype,但Firefox、Safari和Chrome在每个对象上都支持一个属性__proto__。__proto__存在于实例和构造函数的原型对象之间，而不是存在于实例与构造函数之间。
+     - 注意：实例中的指针仅指向原型，而不指向构造函数。
+     - 缺点：
+       - 省略了为构造函数传递初始化参数这一环节，这样将导致所有实例在默认情况下都将取得相同的属性值
+       - 很多属性都被多个实例共享
+     - 例子：
+```
+function Person() {
+}
+Person.prototype.name = "Frank";
+Person.prototype.age = 30;
+Person.prototype.job = "Software Engineer";
+Person.prototype.sayName = function() {
+  console.log(this.name);
+}
+const person = new Person();
+person.sayName();
+     
+// function createPerson(name, age, job) {
+//   const o = new Object();
+//   o.name = name;
+//   o.age = age;
+//   o.job = job;
+//   o.sayName = function() {
+//     console.log(this.name);
+//   };
+//   return o;
+// }
+// const person1 = createPerson("Frank", 30, "Software Engineer");
+// const person2 = createPerson("Greg", 30, "Doctor");
+// person1.sayName();
+// person2.sayName();
+
+// function Person(name, age, job) {
+//   this.name = name;
+//   this.age = age;
+//   this.job = job;
+//   this.sayName = function() {
+//     console.log(this.name);
+//   };
+// };
+// 当作构造函数使用
+// const person1 = new Person("Frank", 30, "Software Engineer");
+// const person2 = new Person("Greg", 30, "Doctor");
+
+// 作为普通函数调用
+// Person("Greg", 30, "Doctor");
+// window.sayName();
+
+// 在另外一个对象的作用域中调用
+// const obj = new Object();
+// Person.call(obj, "Frank", 30, "Nurse");
+// obj.sayName();
+
+function Person() {
+}
+Person.prototype.name = "Frank";
+Person.prototype.age = 30;
+Person.prototype.job = "Software Engineer";
+Person.prototype.friends = ["Kobe", "James"];
+Person.prototype.sayName = function() {
+  console.log(this.name);
+}
+const person = new Person();
+person.sayName();
+console.log(Person.prototype.isPrototypeOf(person)); // 返回true
+console.log(Object.getPrototypeOf(person) == Person.prototype); // true
+console.log(Object.getPrototypeOf(person).name); // Frank
+
+console.log(person.hasOwnProperty("name")); // false
+
+const person2 = new Person();
+person2.name = "Greg";
+console.log("name" in person); // true
+console.log("name" in person2); // true
+
+console.log(person2.name); // Greg
+console.log(person.name); // Frank
+
+console.log(person2.hasOwnProperty("name")); // true
+console.log("name" in person2); // true
+
+delete person2.name;
+console.log(person2.name); // Frank
+console.log("name" in person2); // true
+console.log(person2.hasOwnProperty("name")); // false
+
+String.prototype.startWith = function(text) {
+  return this.indexOf(text) === 0;
+};
+const msg = "HelloWorld!";
+console.log(msg.startsWith("Hello")) // 返回true
+
+person2.friends.push("Frank");
+console.log(person.friends); // [ 'Kobe', 'James', 'Frank' ]
+console.log(person2.friends); // [ 'Kobe', 'James', 'Frank' ]
+```
    - 组合使用构造函数和原型模式
    - 动态原型模式
    - 寄生构造函数模式
