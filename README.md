@@ -388,3 +388,127 @@ function Person(name, age, job) {
 const friend = Person("Frank", 30, "Software Engineer");
 friend.sayName(); // Frank
 - 继承
+   - 注意：
+     1. 由于函数没有签名，所以没有接口继承，只有实现继承。实现继承是通过原型链来实现的。
+     2. 如果要添加方法或者修改父类的方法，一定要在实现继承的后天添加。
+     3. 通过原型链实现继承时，不能使用对象字面量创建原型方法。因为会重写原型链。
+   - 原型链的本质：利用原型让一个引用类型继承另一个引用类型的属性和方法。
+   - 缺点：1）包含引用类型值的原型；2）在创建子类型的实例时，不能向超类型的构造函数中传递参数。
+   - 例子：
+```
+function SuperType() {
+  this.property = true;
+}
+SuperType.prototype.getSuperValue = function() {
+  return this.property;
+}
+
+function SubType() {
+  this.subproperty = false;
+}
+SubType.prototype = new SuperType();
+SubType.prototype.getSubValue = function() {
+  return this.subproperty;
+};
+
+const instance = new SubType();
+console.log(instance.getSuperValue()); // true
+console.log(instance instanceof Object); // true
+console.log(instance instanceof SuperType); // true
+console.log(instance instanceof SubType); // true
+console.log(Object.prototype.isPrototypeOf(instance)); // true
+console.log(SubType.prototype.isPrototypeOf(instance)); // true
+console.log(SuperType.prototype.isPrototypeOf(instance)); // true
+
+function SuperType() {
+  this.colors = ["red", "blue", "green"];
+}
+function SubType() {
+  SuperType.call(this);
+}
+const instance = new SubType();
+instance.colors.push("black");
+
+const instance1 = new SubType();
+console.log(instance.colors); // [ 'red', 'blue', 'green', 'black' ]
+console.log(instance1.colors); // [ 'red', 'blue', 'green' ]
+```
+   - 分类：
+     - 组合继承
+       - 定义：将原型链和借用构造函数的技术组合到一块，从而发挥二者之长的一种继承模式。
+       - 例子：
+```
+function SuperType(name) {
+  this.name = name;
+  this.colors = ["red", "blue", "green"];
+}
+SuperType.prototype.sayName = function() {
+  console.log(this.name);
+}
+function SubType(name, age) {
+  SuperType.call(this, name);
+  this.age = age;
+}
+
+SubType.prototype = new SuperType();
+SubType.prototype.constructor = SubType;
+SubType.prototype.sayAge = function() {
+  console.log(this.age);
+}
+
+const instance1 = new SubType("Frank", 30);
+instance1.colors.push("black");
+console.log(instance1.colors); // [ 'red', 'blue', 'green', 'black' ]
+
+console.log(instance1.sayName()); // Frank
+console.log(instance1.sayAge()); // 30
+```
+- 原型式继承
+  - 定义：借助原型可以基于已有的对象创建新对象，同时还不必因此创建自定义类型。
+  - 例子：
+```
+function object(obj) {
+  function F() {}
+  F.prototype = obj;
+  return new F();
+}
+const person = {
+  name: "Frank",
+  friends: ["Gold", "Frank", "James"]
+};
+const anotherPerson = object(person);
+anotherPerson.name = "Greg";
+anotherPerson.friends.push("Rob");
+
+const yetAnotherPerson = object(person);
+yetAnotherPerson.name = "Linda";
+yetAnotherPerson.friends.push("Kobe");
+console.log(person.friends); // [ 'Gold', 'Frank', 'James', 'Rob', 'Kobe' ]
+```
+- 寄生式继承
+- 寄生组合式继承
+ - 定义：通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。
+ - 例子：
+```
+function inheritPrototype(subType, superType) {
+  const prototype = Object(superType.prototype);
+  prototype.constructor = subType;
+  subType.prototype = prototype;
+}
+
+function SuperType(name) {
+  this.name = name;
+  this.colors = ["red", "blue", "green"];
+}
+SuperType.prototype.sayName = function() {
+  console.log(this.name);
+}
+function SubType(name, age) {
+  SuperType.call(this, name);
+  this.age = age;
+}
+inheritPrototype(SubType, SuperType);
+SuperType.prototype.sayAge = function() {
+  console.log(this.age);
+}
+```
