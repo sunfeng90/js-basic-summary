@@ -342,6 +342,49 @@ console.log(person1.friends === person2.friends); // false
 console.log(person1.sayName === person2.sayName); // true
 ```
    - 动态原型模式
+     - 好处：通过在构造函数中初始化原型，又保持了同时使用构造函数和原型的优点
+     - 例子：
+```
+function Person(name, age, job) {
+  this.name = name;
+  this.age = age;
+  this.job = job;
+  if (typeof this.sayName !== 'function') {
+    Person.prototype.sayName = function() {
+      console.log(this.name);
+    }
+  }
+}
+const gold = new Person("Gold", 30, "Software Engineer");
+gold.sayName(); // Gold
+```
    - 寄生构造函数模式
+     - 注意：返回的对象与构造函数或者与构造函数的原型属性之间没有关系；构造函数返回的对象与在构造函数外部创建的对象没有什么不同 
+     - 例子：
+```
+function SpecialArray() {
+  const values = new Array();
+  values.push.apply(values, arguments);
+
+  values.toPipedString = function() {
+    return this.join("|");
+  };
+
+  return values;
+}
+const colors = new SpecialArray("red", "blue", "green");
+console.log(colors.toPipedString());
+```
    - 稳妥构造函数模式
+     - 定义：所谓稳妥对象，是指没有公共属性，而且其他方法也不引用this的对象。稳妥对象最适合在一些安全的环境中或者防止数据被其他应用程序改动时使用。
+```
+function Person(name, age, job) {
+  const o = new Object();
+  o.sayName = function() {
+    console.log(name);
+  };
+  return o;
+}
+const friend = Person("Frank", 30, "Software Engineer");
+friend.sayName(); // Frank
 - 继承
