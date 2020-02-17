@@ -316,7 +316,31 @@ person2.friends.push("Frank");
 console.log(person.friends); // [ 'Kobe', 'James', 'Frank' ]
 console.log(person2.friends); // [ 'Kobe', 'James', 'Frank' ]
 ```
-   - 组合使用构造函数和原型模式
+  - 组合使用构造函数和原型模式
+     - 好处：构造函数模式用于定义实例属性，而原型模式用于定义方法和共享的属性。
+     - 例子：
+```
+function Person(name, age, job) {
+  this.name = name;
+  this.age = age;
+  this.job = job;
+  this.friends = ["Kobe", "James"];
+}
+Person.prototype = {
+  constructor: Person,
+  sayName: function() {
+    console.log(this.name);
+  }
+}
+const person1 = new Person("Frank", 30, "Software Engineer");
+const person2 = new Person("Gold", 29, "Doctor");
+person1.friends.push("Van");
+
+console.log(person1.friends); // [ 'Kobe', 'James', 'Van' ]
+console.log(person2.friends); // [ 'Kobe', 'James' ]
+console.log(person1.friends === person2.friends); // false
+console.log(person1.sayName === person2.sayName); // true
+```
    - 动态原型模式
    - 寄生构造函数模式
    - 稳妥构造函数模式
